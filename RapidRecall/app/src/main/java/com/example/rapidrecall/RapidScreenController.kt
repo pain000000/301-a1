@@ -1,5 +1,10 @@
 package com.example.rapidrecall
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -25,7 +30,7 @@ enum class RapidScreen() {
 }
 
 
-// Where the navigation of the screen displayed is handled
+// Where the navigation of the screen displayed is handled via NavHost
 @Composable
 fun RapidApp(
     navController: NavHostController = rememberNavController()
@@ -34,14 +39,25 @@ fun RapidApp(
 
     NavHost(
         navController = navController,
-        startDestination = RapidScreen.MainMenu.name
+        startDestination = RapidScreen.MainMenu.name,
+        enterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Start,
+                animationSpec = tween(500)
+            ) + fadeIn(animationSpec = tween(500))
+        },
+        exitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.End,
+                animationSpec = tween(500)
+            ) + fadeOut(animationSpec = tween(500))
+        }
     ) {
         composable(route = RapidScreen.MainMenu.name) {
             MainMenu(
                 logScreen = { navController.navigate(RapidScreen.Log.name) },
                 gameScreen = { navController.navigate(RapidScreen.Game.name) },
                 summaryScreen = { navController.navigate(RapidScreen.Summary.name) },
-                exitScreen = {},
                 modifier = Modifier.fillMaxSize()
             )
         }
