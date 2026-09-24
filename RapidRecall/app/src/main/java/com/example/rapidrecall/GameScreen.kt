@@ -1,25 +1,38 @@
 package com.example.rapidrecall
 
 import android.graphics.Paint
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onVisibilityChangedNode
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.milliseconds
 
 
 @Composable
@@ -29,19 +42,31 @@ fun GameScreen(
 ) {
 
     // these variables control what state of the game the user is currently in
-    var onSequence by remember { mutableStateOf(false) }
-    var onGuess by remember { mutableStateOf(false) }
     var onLength by remember { mutableStateOf(true) }
+    var onCountdown by remember { mutableStateOf(false) }
+    var displaySequence by remember { mutableStateOf(false) }
+    var onGuess by remember { mutableStateOf(false) }
+    var onResult by remember { mutableStateOf(false) }
+
 
     // the actual variable that generates the random sequence
-    val recall = Recall()
+    val recall by remember { mutableStateOf<Recall>(Recall())}
 
     // these variables hold the two inputs (length and guess) needed from the user
     var length by remember { mutableStateOf("") }
     var input by remember { mutableStateOf("") }
+    var check by remember { mutableStateOf("")}
 
-    var currLength: Int? = null
-    val currGuess: String = ""
+    var currLength by remember { mutableStateOf<Int?>(null)}
+
+    // controls the countdown
+    var count by remember { mutableIntStateOf(3) }
+
+    // stores the curr number in the sequence
+    var currSeqNum by remember { mutableStateOf<Int?>(null) }
+
+
+
 
     Column(
         modifier = modifier
@@ -67,8 +92,11 @@ fun GameScreen(
                         // check if given length is valid
                         if (currLength != null) {
                             if (currLength!! > 0) {
+
+                                // generate random sequence
+                                recall.generateRecall(currLength!!)
                                 onLength = !onLength
-                                onSequence = !onSequence
+                                onCountdown = !onCountdown
                             }
                         }
                     }
@@ -78,17 +106,122 @@ fun GameScreen(
             }
         }
 
-        //TODO: Add some sort of delay here (maybe a countdown)
+        if (onCountdown) {
 
-        if (onSequence) {
+            // Controls the countdown
+            LaunchedEffect( key1 = count) {
+                if (count > -1) {
+                    delay(1000L.milliseconds)
+                    count -= 1
+                }
+            }
 
-            //Generate sequence with the provided length; store in sequence
-            recall.generateRecall(currLength!!)
+            Spacer(modifier = Modifier.height(300.dp))
+
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ){
+                Text(
+                    text = if (count > 0) "$count" else "Go",
+                    fontSize = 50.sp
+                )
+            }
+
+            if (count == -1) {
+                displaySequence = !displaySequence
+                onCountdown = !onCountdown
+
+            }
+        }
+
+        if (displaySequence) {
+
+            //TODO: ADD an indicator what place of the sequence it is!
+
+            // Controls the displayed Sequence of numbers
+            LaunchedEffect(key1 = recall.sequence) {
+
+                (recall.sequence).forEach { number ->
+                    currSeqNum = number
+                    delay(1000L.milliseconds)
+
+                }
+                currSeqNum = null
+                displaySequence = !displaySequence
+                onGuess = !onGuess
+            }
+
+            Spacer(modifier = Modifier.height(300.dp))
+
+            Column(
+               modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(text = if (currSeqNum != null) "$currSeqNum" else "",
+                    fontSize = 100.sp
+                )
+            }
+        }
+
+        if (onGuess) {
+            Spacer(modifier = Modifier.height(300.dp))
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                OutlinedTextField(
+                    value = input,
+                    onValueChange = { input = it },
+                    label = { Text(text = "Enter Your Guess Here") }
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+                Button(
+                    onClick = {
+                        //TODO: INPUT ATTEMPT OBJECTS
+                        // check the guess here
+                        check = recall.checkAnswer(input)
+                        onResult = !onResult
+                        onGuess = !onGuess
 
 
+                    }
+                ) {
+                    Text("Guess")
+                }
+            }
+        }
 
+        if (onResult) {
+            Spacer(modifier = Modifier.height(300.dp))
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text("Result: $check")
+                Spacer(modifier = Modifier.height(10.dp))
+                Text("Sequence: ${recall.sequence}")
+                Spacer(modifier = Modifier.height(10.dp))
+                Text("Your Guess: ${input.mapNotNull { it.digitToIntOrNull() }}")
+                Spacer(modifier = Modifier.height(30.dp))
+                Button(
+                    onClick = {
+                        //TODO: STORE THE RESULT HERE IN ATTEMPT CLASS AND ADD TO LIST
 
-            Text("Im Displaying the sequence now")
+                        // Reset the whole loop here
+                        input = ""
+                        length = ""
+                        check = ""
+                        count = 3
+                        currLength = null
+
+                        onLength = !onLength
+                        onResult = !onResult
+                    }
+                ) {
+                    Text("Try Again?")
+                }
+            }
         }
 
         Spacer(modifier = Modifier.weight(1f))
@@ -102,6 +235,7 @@ fun GameScreen(
                 Text("Back")
             }
         }
+
     }
 }
 
@@ -116,3 +250,18 @@ fun GameScreenPreview() {
         modifier = Modifier.fillMaxSize()
     )
 }
+
+/**
+ *
+ * SAMPLE CODE FOR MAKING A LAZY COLUMN
+ * Spacer(modifier = Modifier.height(300.dp))
+ *
+ *             LazyColumn(
+ *                 modifier = Modifier.height(200.dp).fillMaxWidth(),
+ *                 horizontalAlignment = Alignment.CenterHorizontally
+ *             ) {
+ *                 items(items = recall.sequence) {
+ *                     number -> Text("$number")
+ *                 }
+ *             }
+ */
