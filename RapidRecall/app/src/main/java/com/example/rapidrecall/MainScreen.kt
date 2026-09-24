@@ -1,15 +1,11 @@
 package com.example.rapidrecall
 
 import android.app.Activity
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,14 +15,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
-
 
 @Composable
 fun MainMenu(
@@ -40,7 +35,7 @@ fun MainMenu(
     var rapid by remember { mutableStateOf("") }
     var recall by remember { mutableStateOf("") }
 
-
+    // This LaunchedEffect controls the "RAPID RECALL" title animation
     LaunchedEffect(Unit) {
         while(true) {
             rapid = "RAPID"
@@ -57,82 +52,42 @@ fun MainMenu(
     Column(
         modifier = modifier
     ) {
-
         Spacer(modifier = Modifier.height(230.dp))
 
+        // This Column stores the "RAPID RECALL" title
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = if (rapid != "") rapid else recall,
-                fontSize = 90.sp
+                fontSize = 90.sp,
+                fontWeight = FontWeight.Bold,
+                color = DMAUVE
             )
-
         }
 
         Spacer(modifier = Modifier.weight(1f))
 
+        // This Column stores the 4 buttons to navigate game, log, or summary screen, or exit
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Button(
-                onClick = gameScreen,
-                shape = RoundedCornerShape(8.dp),
-                modifier = Modifier.width(200.dp).height(60.dp)
-            ) {
-                Text(
-                    text = "PLAY",
-                    fontSize = 30.sp
-                )
-            }
-
+            MenuButton(gameScreen, PURPLE, "PLAY", 200,30)
             Spacer(modifier = Modifier.height(10.dp))
 
-            Button(
-                onClick =  logScreen,
-                shape = RoundedCornerShape(8.dp),
-                modifier = Modifier.width(200.dp).height(60.dp)
-            ) {
-                Text(
-                    text = "LOG",
-                    fontSize = 30.sp
-                )
-            }
-
+            MenuButton(logScreen, RINDIGO, "LOG", 200, 30)
             Spacer(modifier = Modifier.height(10.dp))
 
-            Button(
-                onClick = summaryScreen,
-                shape = RoundedCornerShape(8.dp),
-                modifier = Modifier.width(200.dp).height(60.dp)
-            ) {
-                Text(
-                    text = "SUMMARY",
-                    fontSize = 30.sp
-                )
-            }
-
+            MenuButton(summaryScreen, IBLUE, "SUMMARY", 200, 30)
             Spacer(modifier = Modifier.height(10.dp))
 
-            Button(
-                onClick = { context?.finish() },
-                shape = RoundedCornerShape(8.dp),
-                modifier = Modifier.width(200.dp).height(60.dp)
-
-            ) {
-                Text(
-                    text = "EXIT",
-                    fontSize = 30.sp
-                )
-            }
-
+            MenuButton({ context?.finish() }, RNAVY, "EXIT", 200, 30)
             Spacer(modifier = Modifier.height(100.dp))
         }
     }
 }
-
 
 @Preview(
     showBackground = true
