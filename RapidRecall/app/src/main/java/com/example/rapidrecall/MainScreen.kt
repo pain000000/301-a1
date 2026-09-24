@@ -12,6 +12,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,6 +24,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.milliseconds
 
 
 @Composable
@@ -30,26 +37,38 @@ fun MainMenu(
 ) {
 
     val context = (LocalContext.current) as? Activity
+    var rapid by remember { mutableStateOf("") }
+    var recall by remember { mutableStateOf("") }
 
+
+    LaunchedEffect(Unit) {
+        while(true) {
+            rapid = "RAPID"
+            recall = ""
+            delay(1000L.milliseconds)
+
+            rapid = ""
+            recall = "RECALL"
+            delay(1000L.milliseconds)
+        }
+
+    }
 
     Column(
         modifier = modifier
     ) {
 
-        Spacer(modifier = Modifier.height(220.dp))
+        Spacer(modifier = Modifier.height(230.dp))
 
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "RAPID",
+                text = if (rapid != "") rapid else recall,
                 fontSize = 90.sp
             )
-            Text(
-                text = "RECALL",
-                fontSize = 90.sp
-            )
+
         }
 
         Spacer(modifier = Modifier.weight(1f))

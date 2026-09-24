@@ -74,7 +74,8 @@ fun RapidApp(
         composable(route = RapidScreen.Summary.name) {
             SummaryScreen(
                 mainScreen = { navController.navigate(RapidScreen.MainMenu.name) },
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
+                attemptList = attemptList
             )
         }
 
