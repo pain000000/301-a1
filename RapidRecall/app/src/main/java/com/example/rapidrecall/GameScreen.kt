@@ -4,6 +4,7 @@ import android.graphics.Paint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,8 +19,11 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -33,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onVisibilityChangedNode
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
@@ -61,29 +66,33 @@ fun GameScreen(
     var onResult by remember { mutableStateOf(false) }
 
 
-    // the actual variable that generates the random sequence (only 1)
+    // This variable stores and generates the desired sequence of numbers
     val recall by remember { mutableStateOf<Recall>(Recall())}
 
-    // these variables hold the two inputs (length and guess) needed from the user
+    // These variables hold the two inputs (length and input) needed from the user
     var length by remember { mutableStateOf("") }
     var input by remember { mutableStateOf("") }
+
+    // This variable stores the result of the guess
     var check by remember { mutableStateOf("")}
 
+    // This variable stores the verified number for sequence length
     var currLength by remember { mutableStateOf<Int?>(null)}
+
+    // This variable stores the displayed number's position in the sequence
     var seqCount by remember { mutableIntStateOf(0)}
 
-    // controls the countdown
+    // This variable controls the countdown
     var count by remember { mutableIntStateOf(3) }
 
-    // stores the curr number in the sequence
+    // This variable stores the currently displayed number in the sequence
     var currSeqNum by remember { mutableStateOf<Int?>(null) }
-
-
 
 
     Column(
         modifier = modifier
     ) {
+
         if (onLength) {
 
             Spacer(modifier = Modifier.height(300.dp))
@@ -92,10 +101,11 @@ fun GameScreen(
                 modifier = Modifier.wrapContentSize().padding(16.dp)
             ) {
                 Text(
-                    text = "Enter your preferred sequence length below",
+                    text = "Enter Your Preferred Sequence Length Below.",
                     fontSize = 30.sp,
                     textAlign = TextAlign.Center,
-                    lineHeight = 40.sp
+                    lineHeight = 40.sp,
+                    color = DMAUVE
                 )
             }
 
@@ -108,12 +118,22 @@ fun GameScreen(
                 OutlinedTextField(
                     value = length,
                     onValueChange = { length = it },
-                    label = { Text(text = "Sequence Length") }
+                    label = { Text(text = "Sequence Length") },
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = PURPLE,
+                        unfocusedBorderColor = PURPLE,
+                        focusedLabelColor = PURPLE,
+                        unfocusedLabelColor = PURPLE
+                    ),
                 )
                 Spacer(modifier = Modifier.height(10.dp))
-                Button(
-                    onClick = {
 
+                MenuButton(
+                    c1 = RINDIGO,
+                    width = 120,
+                    fontSize = 20,
+                    text = "ENTER",
+                    cmd = {
                         currLength = length.toIntOrNull()
                         length = ""
 
@@ -128,9 +148,7 @@ fun GameScreen(
                             }
                         }
                     }
-                ) {
-                    Text("Enter")
-                }
+                )
             }
         }
 
@@ -153,7 +171,8 @@ fun GameScreen(
             ){
                 Text(
                     text = if (count > 0) "$count" else "Go",
-                    fontSize = 50.sp
+                    fontSize = 50.sp,
+                    color = DMAUVE
                 )
             }
 
@@ -165,8 +184,6 @@ fun GameScreen(
         }
 
         if (onDisplaySequence) {
-
-            //TODO: ADD an indicator what place of the sequence it is!
 
             // Displays the sequence of numbers once
             LaunchedEffect(key1 = recall.sequence) {
@@ -205,10 +222,11 @@ fun GameScreen(
                 modifier = Modifier.wrapContentSize().padding(16.dp)
             ) {
                 Text(
-                    text = "Enter your guess of the sequence below",
+                    text = "Enter Your Guess Of The Sequence Below",
                     fontSize = 30.sp,
                     textAlign = TextAlign.Center,
-                    lineHeight = 40.sp
+                    lineHeight = 40.sp,
+                    color = DMAUVE
                 )
             }
 
@@ -221,20 +239,30 @@ fun GameScreen(
                 OutlinedTextField(
                     value = input,
                     onValueChange = { input = it },
-                    label = { Text(text = "Enter Your Guess Here") }
+                    label = { Text(text = "Enter Your Guess Here") },
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = PURPLE,
+                        unfocusedBorderColor = PURPLE,
+                        focusedLabelColor = PURPLE,
+                        unfocusedLabelColor = PURPLE
+                    ),
                 )
                 Spacer(modifier = Modifier.height(10.dp))
-                Button(
-                    onClick = {
+
+                MenuButton(
+                    c1 = RINDIGO,
+                    width = 120,
+                    fontSize = 20,
+                    text = "GUESS",
+                    cmd = {
                         //TODO: INPUT ATTEMPT OBJECTS
                         // check the guess here
                         check = recall.checkAnswer(input)
                         onResult = !onResult
                         onGuess = !onGuess
                     }
-                ) {
-                    Text("Guess")
-                }
+                )
+
             }
         }
 
@@ -294,12 +322,16 @@ fun GameScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Button(
-                onClick = mainScreen
-            ) {
-                Text("Back")
-            }
+            MenuButton(
+                c1 = RINDIGO,
+                width = 120,
+                fontSize = 20,
+                text = "BACK",
+                cmd = mainScreen
+            )
+
         }
+        Spacer(modifier = Modifier.height(50.dp))
 
 
 
