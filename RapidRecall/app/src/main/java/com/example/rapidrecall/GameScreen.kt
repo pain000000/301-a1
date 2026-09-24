@@ -160,10 +160,14 @@ fun GameScreen(
                     delay(1000L.milliseconds)
                     count -= 1
                 }
+
+                if (count == -1) {
+                    onCountdown = !onCountdown
+                    onDisplaySequence = !onDisplaySequence
+                }
             }
 
             Spacer(modifier = Modifier.height(400.dp))
-
 
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -174,12 +178,6 @@ fun GameScreen(
                     fontSize = 50.sp,
                     color = DMAUVE
                 )
-            }
-
-            if (count == -1) {
-                onDisplaySequence = !onDisplaySequence
-                onCountdown = !onCountdown
-
             }
         }
 
@@ -207,10 +205,12 @@ fun GameScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(text = if (currSeqNum != null) "$currSeqNum" else "",
-                    fontSize = 150.sp
+                    fontSize = 150.sp,
+                    color = RINDIGO
                 )
                 Text(text = "Number $seqCount",
-                    fontSize = 10.sp
+                    fontSize = 15.sp,
+                    color = RNAVY
                 )
             }
         }
