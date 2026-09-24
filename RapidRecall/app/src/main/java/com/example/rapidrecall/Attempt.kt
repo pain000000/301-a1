@@ -1,4 +1,5 @@
 package com.example.rapidrecall
 
-class Attempt {
+class Attempt(val seqLength: Int, val input: List<Int>, val sequence: List<Int>, val timestamp: String) {
+
 }

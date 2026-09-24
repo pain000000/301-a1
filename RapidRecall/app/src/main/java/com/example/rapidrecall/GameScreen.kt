@@ -32,13 +32,19 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.util.Date
+import java.util.Locale
 import kotlin.time.Duration.Companion.milliseconds
 
 
 @Composable
 fun GameScreen(
     mainScreen: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    addList: (Attempt) -> Unit
 ) {
 
     // these variables control what state of the game the user is currently in
@@ -183,8 +189,6 @@ fun GameScreen(
                         check = recall.checkAnswer(input)
                         onResult = !onResult
                         onGuess = !onGuess
-
-
                     }
                 ) {
                     Text("Guess")
@@ -193,20 +197,52 @@ fun GameScreen(
         }
 
         if (onResult) {
+
+
+
+
             Spacer(modifier = Modifier.height(300.dp))
+
+            val inputList = input.mapNotNull { it.digitToIntOrNull() }
+
+            LaunchedEffect(Unit) {
+                val formatter = SimpleDateFormat("dd MMMM yyyy HH:mm:ss", Locale.ENGLISH)
+                val timestamp = formatter.format(Date())
+
+                val attempt = Attempt(
+                    seqLength = currLength!!,
+                    input = inputList,
+                    sequence = recall.sequence,
+                    timestamp = timestamp
+                )
+
+                // Add Timestamp to list
+                addList(attempt)
+            }
+
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text("Result: $check")
+
                 Spacer(modifier = Modifier.height(10.dp))
+
                 Text("Sequence: ${recall.sequence}")
+
                 Spacer(modifier = Modifier.height(10.dp))
-                Text("Your Guess: ${input.mapNotNull { it.digitToIntOrNull() }}")
+
+                Text("Your Guess: $inputList")
+
                 Spacer(modifier = Modifier.height(30.dp))
+
                 Button(
                     onClick = {
-                        //TODO: STORE THE RESULT HERE IN ATTEMPT CLASS AND ADD TO LIST
+                        // Tally Attempt Here:
+
+                        // Create Timestamp
+
+
 
                         // Reset the whole loop here
                         input = ""
@@ -236,6 +272,8 @@ fun GameScreen(
             }
         }
 
+
+
     }
 }
 
@@ -247,7 +285,8 @@ fun GameScreen(
 fun GameScreenPreview() {
     GameScreen(
         mainScreen = {},
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        addList = {}
     )
 }
 

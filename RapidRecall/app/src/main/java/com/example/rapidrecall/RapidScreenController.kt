@@ -33,9 +33,10 @@ enum class RapidScreen() {
 // Where the navigation of the screen displayed is handled via NavHost
 @Composable
 fun RapidApp(
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
 ) {
 
+    val attemptList = mutableListOf<Attempt>()
 
     NavHost(
         navController = navController,
@@ -65,7 +66,8 @@ fun RapidApp(
         composable(route = RapidScreen.Log.name) {
             LogScreen(
                 mainScreen = { navController.navigate(RapidScreen.MainMenu.name) },
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
+                attemptList = attemptList
             )
         }
 
@@ -79,7 +81,8 @@ fun RapidApp(
         composable(route = RapidScreen.Game.name) {
             GameScreen(
                 mainScreen = { navController.navigate(RapidScreen.MainMenu.name) },
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
+                addList = { attemptList.add(it) }
             )
         }
     }
