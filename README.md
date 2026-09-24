@@ -20,6 +20,10 @@ https://stackoverflow.com/questions/67401294/jetpack-compose-close-application-b
 
 "Gemini: how would you parse a string input into a list of integers"
 
+"Gemini: how would display a 3s countdown in jetpack compose"
+
+"Gemini: how to create a single digital ticker with LaunchedEffect"
+
 ## Verbal Collaboration
 List students' names and CCIDs here, or simply put `N/A` if not applicable. 
 
