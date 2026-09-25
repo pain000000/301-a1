@@ -19,9 +19,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlin.collections.joinToString
 
 
 @Composable
@@ -35,25 +38,31 @@ fun LogScreen(
     Column(
         modifier = modifier
     ) {
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(40.dp))
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = "LOG",
-                fontSize = 90.sp
+                fontSize = 90.sp,
+                fontWeight = FontWeight.Bold,
+                color = DMAUVE
             )
+            Spacer(modifier = Modifier.height(30.dp))
             Text(
-                text = "SCREEN",
-                fontSize = 90.sp
+                text = "History Of All Your Attempts This Session Below",
+                fontSize = 30.sp,
+                color = PURPLE,
+                lineHeight = 40.sp,
+                textAlign = TextAlign.Center
             )
         }
 
-        Spacer(modifier = Modifier.height(200.dp))
+        Spacer(modifier = Modifier.height(50.dp))
 
         LazyColumn(
-            modifier = Modifier.height(400.dp).fillMaxWidth(),
+            modifier = Modifier.height(450.dp).fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
                 ) {
            itemsIndexed(items = attemptList) {
@@ -67,13 +76,16 @@ fun LogScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Button(
-                onClick = mainScreen
-            ) {
-                Text("BACK")
-            }
+            MenuButton(
+                c1 = RINDIGO,
+                width = 120,
+                fontSize = 20,
+                text = "BACK",
+                cmd = mainScreen
+            )
 
         }
+        Spacer(modifier = Modifier.height(50.dp))
     }
 }
 
@@ -84,18 +96,23 @@ fun FormatAttempt(attempt: Attempt, index: Int) {
         modifier = Modifier.fillMaxWidth()
             .padding(16.dp)
             .clip(RoundedCornerShape(16.dp))
-            .background(if (attempt.check == "Correct!") Color.Green else Color.Red)
+            .background(if (attempt.check == "Correct!") RINDIGO else IBLUE)
     ) {
         Spacer(modifier = Modifier.height(16.dp))
-        Text("ATTEMPT ${index+1}")
-        Text("Check: ${attempt.check}")
-        Text("Sequence Length: ${attempt.seqLength}")
-        Text("Your Guess: ${attempt.input}")
-        Text("Sequence: ${attempt.sequence}")
-        Text("Timestamp: ${attempt.timestamp}")
+        Text(
+            text = "ATTEMPT ${index+1}",
+            color = Color.White, fontWeight = FontWeight.Bold,
+            fontSize = 30.sp
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Text(text = "Sequence Length: ${(attempt.seqLength)}", color = Color.White)
+        Text(text = "Generated Sequence: ${(attempt.sequence).joinToString(separator = "")}", color = Color.White)
+        Text(text = "Your Guess: ${(attempt.input).joinToString(separator = "")}", color = Color.White)
+        Text(text = "Check: ${attempt.check}", color = Color.White)
+        Text(text = "Timestamp: ${attempt.timestamp}", color = Color.White)
         Spacer(modifier = Modifier.height(16.dp))
     }
-    Spacer(modifier = Modifier.height(10.dp))
 }
 
 @Preview(

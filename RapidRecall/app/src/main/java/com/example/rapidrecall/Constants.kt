@@ -20,6 +20,13 @@ val RINDIGO = Color(0xff6B00D7)
 val IBLUE = Color(0xff3E00B3)
 val RNAVY = Color(0xff190087)
 
+// This enum class is used to name the different routes for the screen
+enum class RapidScreen() {
+    MainMenu,
+    Game,
+    Log,
+    Summary
+}
 // menuButton
 @Composable
 fun MenuButton(

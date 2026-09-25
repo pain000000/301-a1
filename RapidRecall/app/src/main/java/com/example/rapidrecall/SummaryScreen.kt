@@ -16,6 +16,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,37 +40,41 @@ fun SummaryScreen(
     Column(
         modifier = modifier
     ) {
-
+        Spacer(modifier = Modifier.height(40.dp))
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = "SUMMARY",
-                fontSize = 80.sp
+                fontSize = 70.sp,
+                fontWeight = FontWeight.Bold,
+                color = DMAUVE
             )
+            Spacer(modifier = Modifier.height(30.dp))
             Text(
-                text = "SCREEN",
-                fontSize = 80.sp
+                text = "Some Statistics About This Session Below",
+                fontSize = 30.sp,
+                color = PURPLE,
+                lineHeight = 40.sp,
+                textAlign = TextAlign.Center
             )
         }
 
         // Calculate required parameters here once
-        LaunchedEffect(Unit) {
-            totalAttempts = attemptList.size
+        totalAttempts = attemptList.size
 
-            for (attempt in attemptList) {
-                if (attempt.check == "Correct!") {
-                    rightAttempts += 1
-                }
+        for (attempt in attemptList) {
+            if (attempt.check == "Correct!") {
+                rightAttempts += 1
             }
-
-            if (totalAttempts != 0) {
-                val percentage = (rightAttempts / totalAttempts) * 100
-                correctPercentage = percentage.toString()
-            }
-
         }
+
+        if (totalAttempts > 0) {
+            val percentage = (rightAttempts.toFloat() / totalAttempts.toFloat()) * 100.0
+            correctPercentage = "%.1f".format(percentage)
+        }
+
 
         Spacer(modifier = Modifier.height(200.dp))
         // display here
@@ -78,17 +84,23 @@ fun SummaryScreen(
         ) {
             Text(
                 text = "Correct Attempts: $rightAttempts",
-                fontSize = 20.sp
+                fontSize = 30.sp,
+                fontWeight = FontWeight.Bold,
+                color = RINDIGO
             )
             Text(
                 text = "Total Attempts: $totalAttempts",
-                fontSize = 20.sp
+                fontSize = 30.sp,
+                fontWeight = FontWeight.Bold,
+                color = RINDIGO
             )
             Text(
                 text =
-                    if (correctPercentage != "") "Correct Percentage: $correctPercentage%" else
-                    "Correct Percentage: 0%",
-                fontSize = 20.sp
+                    if (correctPercentage != "") "Win Percentage: $correctPercentage%" else
+                    "Win Percentage: 0%",
+                fontSize = 30.sp,
+                fontWeight = FontWeight.Bold,
+                color = RINDIGO
             )
         }
         Spacer(modifier = Modifier.weight(1f))
@@ -97,13 +109,16 @@ fun SummaryScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Button(
-                onClick = mainScreen
-            ) {
-                Text("BACK")
-            }
+            MenuButton(
+                c1 = RINDIGO,
+                width = 120,
+                fontSize = 20,
+                text = "BACK",
+                cmd = mainScreen
+            )
 
         }
+        Spacer(modifier = Modifier.height(50.dp))
     }
 }
 

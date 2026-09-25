@@ -1,14 +1,17 @@
 package com.example.rapidrecall
 
+import android.R
 import android.graphics.Paint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,8 +20,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -35,8 +40,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onVisibilityChangedNode
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
@@ -117,6 +124,7 @@ fun GameScreen(
             ) {
                 OutlinedTextField(
                     value = length,
+                    textStyle = TextStyle(textAlign = TextAlign.Center, color = PURPLE),
                     onValueChange = { length = it },
                     label = { Text(text = "Sequence Length") },
                     colors = OutlinedTextFieldDefaults.colors(
@@ -208,7 +216,7 @@ fun GameScreen(
                     fontSize = 150.sp,
                     color = RINDIGO
                 )
-                Text(text = "Number $seqCount",
+                Text(text = if (seqCount > 0) "Number $seqCount" else "",
                     fontSize = 15.sp,
                     color = RNAVY
                 )
@@ -238,6 +246,7 @@ fun GameScreen(
             ) {
                 OutlinedTextField(
                     value = input,
+                    textStyle = TextStyle(textAlign = TextAlign.Center, color = PURPLE),
                     onValueChange = { input = it },
                     label = { Text(text = "Enter Your Guess Here") },
                     colors = OutlinedTextFieldDefaults.colors(
@@ -255,8 +264,6 @@ fun GameScreen(
                     fontSize = 20,
                     text = "GUESS",
                     cmd = {
-                        //TODO: INPUT ATTEMPT OBJECTS
-                        // check the guess here
                         check = recall.checkAnswer(input)
                         onResult = !onResult
                         onGuess = !onGuess
@@ -281,7 +288,7 @@ fun GameScreen(
                     timestamp = timestamp,
                     check = check
                 )
-                // Add Timestamp to list
+                // Add overall Attempt to list
                 addList(attempt)
             }
 
@@ -291,16 +298,39 @@ fun GameScreen(
             ) {
                 Text(
                     text = check,
-                    fontSize = 50.sp
+                    fontSize = 85.sp,
+                    color = DMAUVE
                 )
+
                 Spacer(modifier = Modifier.height(10.dp))
-                Text("Sequence: ${recall.sequence}")
-                Spacer(modifier = Modifier.height(10.dp))
-                Text("Your Guess: $inputList")
+                Row(
+                    modifier = Modifier.horizontalScroll(rememberScrollState())
+                        .padding(16.dp)
+                ) {
+                    Text(
+                        text ="Generated Sequence: ${(recall.sequence).joinToString(separator = "")}",
+                        color = PURPLE
+                    )
+                }
+
+                Row(
+                    modifier = Modifier.horizontalScroll(rememberScrollState())
+                        .padding(16.dp)
+                ) {
+                    Text(
+                        text = "Your Guess: ${inputList.joinToString(separator = "")}",
+                        color = PURPLE
+                    )
+                }
+
                 Spacer(modifier = Modifier.height(30.dp))
 
-                Button(
-                    onClick = {
+                MenuButton(
+                    c1 = RINDIGO,
+                    width = 180,
+                    fontSize = 20,
+                    text = "TRY AGAIN",
+                    cmd = {
                         // Reset the whole loop
                         input = ""
                         length = ""
@@ -311,13 +341,13 @@ fun GameScreen(
                         onLength = !onLength
                         onResult = !onResult
                     }
-                ) {
-                    Text("Try Again")
-                }
+                )
             }
         }
 
         Spacer(modifier = Modifier.weight(1f))
+
+        // This column stores the BACK button
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -329,7 +359,6 @@ fun GameScreen(
                 text = "BACK",
                 cmd = mainScreen
             )
-
         }
         Spacer(modifier = Modifier.height(50.dp))
 

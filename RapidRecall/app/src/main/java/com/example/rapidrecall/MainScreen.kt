@@ -32,6 +32,7 @@ fun MainMenu(
 ) {
 
     val context = (LocalContext.current) as? Activity
+
     var rapid by remember { mutableStateOf("") }
     var recall by remember { mutableStateOf("") }
 

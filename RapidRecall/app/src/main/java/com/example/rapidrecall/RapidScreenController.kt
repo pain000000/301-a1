@@ -22,12 +22,6 @@ import androidx.navigation.compose.rememberNavController
 
 
 
-enum class RapidScreen() {
-    MainMenu,
-    Game,
-    Log,
-    Summary
-}
 
 
 // Where the navigation of the screen displayed is handled via NavHost
@@ -38,6 +32,7 @@ fun RapidApp(
 
     val attemptList = mutableListOf<Attempt>()
 
+    // Controls the navigation between different screen displays
     NavHost(
         navController = navController,
         startDestination = RapidScreen.MainMenu.name,
@@ -54,6 +49,7 @@ fun RapidApp(
             ) + fadeOut(animationSpec = tween(500))
         }
     ) {
+        // Starting Screen
         composable(route = RapidScreen.MainMenu.name) {
             MainMenu(
                 logScreen = { navController.navigate(RapidScreen.Log.name) },
@@ -62,7 +58,7 @@ fun RapidApp(
                 modifier = Modifier.fillMaxSize()
             )
         }
-
+        // Log Screen
         composable(route = RapidScreen.Log.name) {
             LogScreen(
                 mainScreen = { navController.navigate(RapidScreen.MainMenu.name) },
@@ -70,7 +66,7 @@ fun RapidApp(
                 attemptList = attemptList
             )
         }
-
+        // Summary Screen
         composable(route = RapidScreen.Summary.name) {
             SummaryScreen(
                 mainScreen = { navController.navigate(RapidScreen.MainMenu.name) },
@@ -78,7 +74,7 @@ fun RapidApp(
                 attemptList = attemptList
             )
         }
-
+        // Game Screen
         composable(route = RapidScreen.Game.name) {
             GameScreen(
                 mainScreen = { navController.navigate(RapidScreen.MainMenu.name) },
