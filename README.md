@@ -26,6 +26,8 @@ https://stackoverflow.com/questions/67401294/jetpack-compose-close-application-b
 
 "Gemini: how to generate a timestamp in string format andriod 8.0 and below"
 
+"Color Pallete Source: https://www.schemecolor.com/blue-violet-gradient.php"
+
 ## Verbal Collaboration
 List students' names and CCIDs here, or simply put `N/A` if not applicable. 
 
