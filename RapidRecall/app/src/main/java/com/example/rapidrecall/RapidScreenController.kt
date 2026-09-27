@@ -1,38 +1,34 @@
 package com.example.rapidrecall
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.ActivityNavigator
-import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
-
-
-
-
-
-
-
-// Where the navigation of the screen displayed is handled via NavHost
+/**
+ * Stores the necessary logic to control what is screen is displayed at any moment within the app
+ *
+ * Navigating between screen is made possible by NavHost which uses navController to control which
+ * screen is displayed at any point in time. Each screen is stored inside a composable and accompanied
+ * by a route name.
+ *
+ * @param navController: The "Controller" of which screen is displayed
+ */
 @Composable
 fun RapidApp(
     navController: NavHostController = rememberNavController(),
 ) {
-
+    // The list containing of all attempts recorded
     val attemptList = mutableListOf<Attempt>()
 
-    // Controls the navigation between different screen displays
+    // Sets up the navigation between screens and sets up which screen is displayed first
     NavHost(
         navController = navController,
         startDestination = RapidScreen.MainMenu.name,

@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+// Custom Color objects for the color palette of the app
 val QLILAC = Color(0xffD391FA)
 val DMAUVE = Color(0xffC364FA)
 val PURPLE = Color(0xffA230ED)
@@ -20,14 +21,23 @@ val RINDIGO = Color(0xff6B00D7)
 val IBLUE = Color(0xff3E00B3)
 val RNAVY = Color(0xff190087)
 
-// This enum class is used to name the different routes for the screen
+// This enum class stores different route names for the screen
 enum class RapidScreen() {
     MainMenu,
     Game,
     Log,
     Summary
 }
-// menuButton
+
+/**
+ * A Basic template for a button used in the app
+ *
+ * @param cmd: The lambda function when the Button is clicked
+ * @param c1: The color of the button
+ * @param text: The text displayed on the Button
+ * @param width: The width of the Button
+ * @param fontSize: The size of the text displayed on the Button
+ */
 @Composable
 fun MenuButton(
     cmd: () -> Unit,
@@ -54,3 +64,4 @@ fun MenuButton(
         )
     }
 }
+

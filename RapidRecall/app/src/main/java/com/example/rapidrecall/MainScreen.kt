@@ -23,6 +23,18 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
 
+/**
+ * Stores the necessary logic for what is displayed on the main screen
+ *
+ * Within the screen displays "RAPID RECALL" title flashing alternately to
+ * illustrate the nature of the game. Each Button displayed is using the MenuButton()
+ * function which is defined in Constants.kt
+ *
+ * @param gameScreen: Lambda function which navigates to the game screen
+ * @param logScreen: Lambda function which navigates to the log screen
+ * @param summaryScreen: Lambda function which navigates to the summary screen
+ * @param modifier: Modifier
+ */
 @Composable
 fun MainMenu(
    gameScreen: () -> Unit,
@@ -36,7 +48,7 @@ fun MainMenu(
     var rapid by remember { mutableStateOf("") }
     var recall by remember { mutableStateOf("") }
 
-    // This LaunchedEffect controls the "RAPID RECALL" title animation
+    // Controls the "RAPID RECALL" title animation
     LaunchedEffect(Unit) {
         while(true) {
             rapid = "RAPID"

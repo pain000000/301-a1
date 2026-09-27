@@ -1,7 +1,6 @@
 package com.example.rapidrecall
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,10 +8,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -26,7 +23,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlin.collections.joinToString
 
-
+/**
+ * Stores the necessary logic for what is displayed on the log screen
+ *
+ * Each Attempt objects which where stored in a list in RapidScreenController.kt
+ * their stored information is dissected and wrapped into Column which is then
+ * displayed in a LazyColumn.
+ *
+ * @param mainScreen: Lambda function which navigates back to the main screen
+ * @param modifier: Modifier
+ * @param attemptList: The list which stores all the recorded attempts in a session
+ */
 @Composable
 fun LogScreen(
     mainScreen: () -> Unit,
@@ -89,6 +96,12 @@ fun LogScreen(
     }
 }
 
+/**
+ * Formats and displays the information stored in an Attempt object
+ *
+ * @param attempt: The attempt to be formatted
+ * @param index: The attempt number
+ */
 @Composable
 fun FormatAttempt(attempt: Attempt, index: Int) {
     Column(
@@ -109,7 +122,7 @@ fun FormatAttempt(attempt: Attempt, index: Int) {
         Text(text = "Sequence Length: ${(attempt.seqLength)}", color = Color.White)
         Text(text = "Generated Sequence: ${(attempt.sequence).joinToString(separator = "")}", color = Color.White)
         Text(text = "Your Guess: ${(attempt.input).joinToString(separator = "")}", color = Color.White)
-        Text(text = "Check: ${attempt.check}", color = Color.White)
+        Text(text = "Result: ${attempt.check}", color = Color.White)
         Text(text = "Timestamp: ${attempt.timestamp}", color = Color.White)
         Spacer(modifier = Modifier.height(16.dp))
     }
