@@ -4,13 +4,13 @@ plugins {
 }
 
 android {
-    namespace = "com.example.rapidrecall"
+    namespace = "com.example.madrona_rapidrecall"
     compileSdk {
         version = release(37)
     }
 
     defaultConfig {
-        applicationId = "com.example.rapidrecall"
+        applicationId = "com.example.madrona_rapidrecall"
         minSdk = 24
         targetSdk = 37
         versionCode = 1
@@ -38,7 +38,6 @@ android {
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.compose.animation)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)

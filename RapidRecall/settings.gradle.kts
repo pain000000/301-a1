@@ -22,6 +22,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "RapidRecall"
+rootProject.name = "madrona-RapidRecall"
 include(":app")
  
